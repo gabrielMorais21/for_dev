@@ -33,7 +33,6 @@ void main() {
 
     await sut!.auth();
 
-    // expect(actual, matcher)
     verify(httpClient!.request(url: url!, method: 'post'));
 
 
