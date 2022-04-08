@@ -1,24 +1,16 @@
+
+
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:meta/meta.dart';
 
-import 'package:ForDev/domain/usecases/authentication.dart';
-class RemoteAuthencation {
-  final HttpClient httpClient;
-  final String url;
 
-  RemoteAuthencation({@required this.httpClient, @required this.url});
+import 'package:ForDev/data/usecases/remote_authentication.dart';
+import 'package:ForDev/domain/usecases/usecases.dart';
+import 'package:ForDev/data/http/http.dart';
 
-  Future<void> auth(AuthenticationParams params) async {
-    final body = {'email': params.email, 'password': params.secret};
-    await httpClient.request(url: url, method: 'post', body: body);
-  }
-}
 
-abstract class HttpClient {
-  Future<void> request({@required String url, @required String method, Map body});
-}
+
 
 class HttpClientSpy extends Mock implements HttpClient {
   
