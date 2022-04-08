@@ -56,4 +56,26 @@ void main() {
     // assert
     expect(future, throwsA(DomainError.unexpected));
   });
+
+    test("Should throw UnexpectedError if httpClient returns 500", () {
+    when(httpClient.request(
+            url: anyNamed('url'),
+            method: anyNamed('method'),
+            body: anyNamed('body')))
+        .thenThrow(HttpError.serverError);
+    final future = sut.auth(params);
+    // assert
+    expect(future, throwsA(DomainError.unexpected));
+  });
+
+      test("Should throw InvalidCrendentialsError if httpClient returns 401", () {
+    when(httpClient.request(
+            url: anyNamed('url'),
+            method: anyNamed('method'),
+            body: anyNamed('body')))
+        .thenThrow(HttpError.unauthorized);
+    final future = sut.auth(params);
+    // assert
+    expect(future, throwsA(DomainError.invalidCredentials));
+  });
 }

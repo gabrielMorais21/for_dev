@@ -1,4 +1,3 @@
-
 import 'package:meta/meta.dart';
 
 import '../../domain/usecases/usecases.dart';
@@ -16,8 +15,10 @@ class RemoteAuthencation {
     final body = RemoteAuthenticationParams.fromDomain(params).toJson();
     try {
       await httpClient.request(url: url, method: 'post', body: body);
-    } on HttpError {
-      throw DomainError.unexpected;
+    } on HttpError catch (error) {
+      error == HttpError.unauthorized
+          ? throw DomainError.invalidCredentials
+          : throw DomainError.unexpected;
     }
   }
 }
