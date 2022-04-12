@@ -26,6 +26,12 @@ void main() {
   });
 
   test('Should call HttpClient with correct Url', () async {
+    when(httpClient.request(
+            url: anyNamed('url'),
+            method: anyNamed('method'),
+            body: anyNamed('body')))
+        .thenAnswer((_) async =>
+            {'accessToken': faker.guid.guid(), 'name': faker.person.name()});
     // action
     await sut.auth(params);
     // assert
@@ -57,7 +63,7 @@ void main() {
     expect(future, throwsA(DomainError.unexpected));
   });
 
-    test("Should throw UnexpectedError if httpClient returns 500", () {
+  test("Should throw UnexpectedError if httpClient returns 500", () {
     when(httpClient.request(
             url: anyNamed('url'),
             method: anyNamed('method'),
@@ -68,7 +74,7 @@ void main() {
     expect(future, throwsA(DomainError.unexpected));
   });
 
-      test("Should throw InvalidCrendentialsError if httpClient returns 401", () {
+  test("Should throw InvalidCrendentialsError if httpClient returns 401", () {
     when(httpClient.request(
             url: anyNamed('url'),
             method: anyNamed('method'),
@@ -77,5 +83,19 @@ void main() {
     final future = sut.auth(params);
     // assert
     expect(future, throwsA(DomainError.invalidCredentials));
+  });
+
+  test("Should return an Account if httpClient returns 200", () async {
+    final accessToken = faker.guid.guid();
+    when(httpClient.request(
+            url: anyNamed('url'),
+            method: anyNamed('method'),
+            body: anyNamed('body')))
+        .thenAnswer((_) async =>
+            {'accessToken': accessToken, 'name': faker.person.name()});
+
+    final account = await sut.auth(params);
+    // assert
+    expect(account.token, accessToken);
   });
 }
