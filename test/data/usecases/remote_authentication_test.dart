@@ -93,7 +93,6 @@ void main() {
   test(
       "Should throw UnexpectedError if httpClient returns 200 with invalid data",
       () {
-
     mockHttpData({'invalid_key': 'invalid_value'});
 
     final future = sut.auth(params);
